@@ -2,8 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const config = require('./src/config'); // Konfigurazio zentralizatua
+const connectDB = require('./src/config/database');
 
 const app = express();
+
+connectDB();
 
 // Middleware
 app.use(cors());
