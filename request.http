@@ -1,0 +1,19 @@
+### 1. PROBA: Erabiltzaile berria sortu (Register)
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "lastName": "Nagusi",
+  "email": "admin@test.com",
+  "password": "pasahitza123"
+}
+
+### 2. PROBA: Saioa hasi (Login)
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "pasahitza123"
+}
