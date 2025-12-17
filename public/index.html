@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Who are you?</title>
+    <link href="css/main.css" rel="stylesheet">
+    <script type="module" src="js/main.js"></script>
+    <style>
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-top: none;
+            z-index: 50;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: white;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-active {
+            background-color: #e9e9e9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <div class="content">
+        <main class="app" id="root">
+
+            <div class="flex flex-col h-full transition-transform">
+                <div class="navbar">
+                    <div class="navbar-content px-2">
+                        <div class="left-icons">
+                            <!-- SVG icons -->
+                        </div>
+                        <div class="flex items-center">
+                            <h1 class="text-2xl font-bold dark:text-white">Who Are Ya?
+                                <span class="text-sm" id="gamenumber"></span>
+                            </h1>
+                        </div>
+                        <div class="right-icons">
+                            <!-- SVG icons -->
+                        </div>
+                    </div>
+                    <hr class="dark:border-t-white/10 border-t-1">
+                </div>
+
+                <div class="grow flex flex-col relative">
+                    <div class="mx-auto w-full pb-2 sm:max-w-sm text-sm text-gray-500">
+                        <div class="game min-h-[195px] w-full pt-4 sm:p-4 bg-white sm:rounded-lg border-b sm:border relative">
+                            <div>
+                                <div class="w-[150px] h-[150px] mx-auto rounded bg-white relative" id="picbox">
+                                    <img width="150" height="150"
+                                         class="align-center w-full transition-all duration-500 pointer-events-none will-change-[filter] hue-rotate-180 blur"
+                                         draggable="false"
+                                         src="https://media.api-sports.io/football/players/0.png"
+                                         alt="Mystery Footballer"
+                                         style="--tw-blur:blur(9px);"
+                                         id="mistery">
+                                </div>
+                            </div>
+
+                            <!-- Combobox input -->
+                            <div role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                                 class="relative mt-2 w-full" id="combobox">
+                                <input type="text" autocomplete="off" aria-autocomplete="list"
+                                       placeholder="Search player"
+                                       class="w-full sm:rounded text-lg py-3 px-6 border sm:border-slate-200 uppercase"
+                                       value="" id="myInput">
+                                <!-- JS-k sortuko ditu .autocomplete-items hemen -->
+                            </div>
+
+                            <a href="?game=XXXX"
+                               class="hover:bg-gray-100 transition-colors absolute left-2 sm:-left-4 top-2 sm:top-4 uppercase text-sm bg-white p-2 rounded-lg drop-shadow-md border">
+                                <div class="relative back-icon" id="back-icon"></div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex w-full sm:mt-6 max-w-sm mx-auto justify-center items-center dark:text-white">
+                        <div class="w-full">
+                            <div id="players"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
