@@ -15,6 +15,14 @@ exports.register = async (req, res) => {
     try {
         const { name, lastName, email, password } = req.body;
 
+        //Egiaztatu datu guztiak jaso direla
+        if(!name || !lastName || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Datu guztiak sartzea beharrezkoa da'
+            });
+        }
+
         // Egiaztatu ea existitzen den
         const userExists = await User.findOne({ email });
         if (userExists) {
@@ -34,19 +42,24 @@ exports.register = async (req, res) => {
             role
         });
 
+        //Tokena sortu
+        const token = generateToken(user._id, user.role);
+
         res.status(201).json({
             success: true,
-            token: generateToken(user._id, user.role),
+            message: 'Erabiltzailea ondo erregistratu da',
+            token,
             user: {
                 id: user._id,
                 name: user.name,
+                lastNme: user.lastName,
                 email: user.email,
                 role: user.role
             }
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message:'Errorea erregistroan', error:error.message });
     }
 };
 
@@ -56,26 +69,64 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Erabiltzailea bilatu
-        const user = await User.findOne({ email });
-
-        // Erabiltzailea existitzen den eta pasahitza ondo dagoen egiaztatu
-        if (user && (await user.matchPassword(password))) {
-            res.json({
-                success: true,
-                token: generateToken(user._id, user.role),
-                user: {
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role
-                }
+        //Datuak egiaztatu
+        if(!email || !password){
+            return res.status(400).json({
+                success: false,
+                message: 'Emaila eta pasahitza sartzea beharrezkoa da'
             });
-        } else {
-            res.status(401).json({ success: false, message: 'Kredentzial baliogabeak' });
         }
 
+        // Erabiltzailea bilatu
+        const user = await User.findOne({ email });
+        if(!user){
+            return res.status(401).json({
+                 success: false,
+                 message: 'Ez da erabiltzailea existitzen'
+            });
+        }
+
+        // Erabiltzailea existitzen den eta pasahitza ondo dagoen egiaztatu
+        const batDator = await user.matchPassword(password);
+        if (!batDator) {
+            return res.status(401).json({
+                  success: false,
+                  message: 'Pasahitza okerra da'
+            });
+        }
+
+        //Tokena sortu
+        const token = generateToken(user._id, user.role);
+
+        res.status(200).json({
+               success: true,
+               message: 'Erabiltzailea ondo sartu da',
+               token,
+               user: {
+                 id: user._id,
+                 name: user.name,
+                 lastName: user.lastName,
+                 email: user.email,
+                 role: user.role
+                 }
+        });
+
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: 'Errorea login egitean', error: error.message });
     }
+};
+
+exports.logout = async (req, res) => {
+      try {
+         res.status(200).json({
+             success: true,
+             message: 'Saioa ondo itxi da'
+         });
+      }catch(error) {
+         res.status(500).json({
+            success: false,
+            message: 'Errorea logout egitean',
+            error: error.message
+         });
+      }
 };

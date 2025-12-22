@@ -22,12 +22,12 @@ const playerSchema = new mongoose.Schema({
     teamId: {
         type: Number,
         required: true,
-        ref: 'team'
+        ref: 'Team'
     },
     leagueId: {
         type: Number,
         required: true,
-        ref: 'league'
+        ref: 'League'
     },
     position: {
         type: String,
