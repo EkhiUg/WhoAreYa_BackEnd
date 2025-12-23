@@ -6,27 +6,27 @@ const User = require('../models/User');
 exports.protect = async (req, res, next) => {
     let token;
 
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        try {
-            // Tokena lortu ("Bearer TOKEN_HEMEN" formatutik)
-            token = req.headers.authorization.split(' ')[1];
-
-            // Egiaztatu
-            const decoded = jwt.verify(token, config.jwtSecret);
-
-            // Erabiltzailea bilatu eta eskaerari (req) erantsi
-            req.user = await User.findById(decoded.id).select('-password');
-            next();
-
-        } catch (error) {
-            res.status(401).json({ success: false, message: 'Ez duzu baimenik, token baliogabea' });
-        }
+    if(req.cookies && req.cookies.token) {
+        token = req.cookies.token;
     }
 
-    if (!token) {
-        res.status(401).json({ success: false, message: 'Ez duzu baimenik, tokena falta da' });
+    if(!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+
+    if(!token) {
+        return res.status(401).json({success: false, message: 'Tokena falta da'});
+    }
+
+    try{
+        const decoded = jwt.verify(token, config.jwtSecret);
+        req.user=await User.findById(decoded.id).select('-password');
+        next();
+    }catch(error) {
+        return res.status(401).json({success: false, message: 'Token baliogabea'});
     }
 };
+
 
 // Admin dela egiaztatzeko
 exports.authorize = (...roles) => {

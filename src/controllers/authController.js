@@ -45,6 +45,13 @@ exports.register = async (req, res) => {
         //Tokena sortu
         const token = generateToken(user._id, user.role);
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
         res.status(201).json({
             success: true,
             message: 'Erabiltzailea ondo erregistratu da',
@@ -98,6 +105,13 @@ exports.login = async (req, res) => {
         //Tokena sortu
         const token = generateToken(user._id, user.role);
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
         res.status(200).json({
                success: true,
                message: 'Erabiltzailea ondo sartu da',
@@ -118,6 +132,8 @@ exports.login = async (req, res) => {
 
 exports.logout = async (req, res) => {
       try {
+         res.clearCookie("token");
+
          res.status(200).json({
              success: true,
              message: 'Saioa ondo itxi da'
